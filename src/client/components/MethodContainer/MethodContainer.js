@@ -1,14 +1,14 @@
 import React from 'react';
 import { gql, graphql } from 'react-apollo';
 
-const MethodContainer = ({data: {loading, error, brewMethods}}) => {
-    if (loading) {
-        return <p>Loading ...</p>;
-    } else if (error) {
-        return <p>{error.message}</p>;
-    }
+const MethodContainer = ({ data: { loading, error, brewMethods } }) => {
+  if (loading) {
+    return <p>Loading ...</p>;
+  } else if (error) {
+    return <p>{error.message}</p>;
+  }
 
-    return <ul>{brewMethods.map(method => <li>{method.name}</li>)}</ul>;
+  return <ul>{brewMethods.map(method => <li>{method.name}</li>)}</ul>;
 };
 
 export const methodContainerQuery = gql`
@@ -21,5 +21,5 @@ export const methodContainerQuery = gql`
  `;
 
 export default graphql(methodContainerQuery, {
-    options: {pollInterval: 5000},
+  options: { pollInterval: 5000 }
 })(MethodContainer);

@@ -141,20 +141,17 @@ var server = (0, _express2.default)();
 
 server.use('/static', _express2.default.static(_path2.default.join(process.cwd(), 'public/client')));
 
-server.use('/graphql', bodyParser.json(), (0, _graphqlServerExpress.graphqlExpress)({
-  schema: schema
-}));
+server.use('/graphql', bodyParser.json(), (0, _graphqlServerExpress.graphqlExpress)({ schema: schema }));
 
-server.use('/graphiql', (0, _graphqlServerExpress.graphiqlExpress)({
-  endpointURL: '/graphql'
-}));
+server.use('/graphiql', (0, _graphqlServerExpress.graphiqlExpress)({ endpointURL: '/graphql' }));
 
 server.use(function (req, res) {
   (0, _reactRouter.match)({ routes: _routes2.default, location: req.originalUrl }, function (error, redirectLocation, renderProps) {
     if (redirectLocation) {
       res.redirect(redirectLocation.pathname + redirectLocation.search);
     } else if (error) {
-      console.error('ROUTER ERROR:', error); // eslint-disable-line no-console
+      console.error('ROUTER ERROR:', error);
+      // eslint-disable-line no-console
       res.status(500);
     } else if (renderProps) {
       var client = new _reactApollo.ApolloClient({
@@ -167,7 +164,9 @@ server.use(function (req, res) {
           return null;
         },
         ssrMode: true,
-        networkInterface: (0, _transport2.default)('http://localhost:4000', { cookie: req.header('Cookie') })
+        networkInterface: (0, _transport2.default)('http://localhost:4000', {
+          cookie: req.header('Cookie')
+        })
       });
 
       var component = _react2.default.createElement(
@@ -180,14 +179,12 @@ server.use(function (req, res) {
         var data = client.store.getState().apollo.data;
         res.status(200);
 
-        var html = _react2.default.createElement(_Html2.default, {
-          content: content,
-          state: { apollo: { data: data } }
-        });
+        var html = _react2.default.createElement(_Html2.default, { content: content, state: { apollo: { data: data } } });
         res.send('<!doctype html>\n' + _server2.default.renderToStaticMarkup(html));
         res.end();
       }).catch(function (e) {
-        console.error('RENDERING ERROR:', e); // eslint-disable-line no-console
+        console.error('RENDERING ERROR:', e);
+        // eslint-disable-line no-console
         res.status(500);
         res.end('An error occurred. Please submit an issue to [https://github.com/apollographql/GitHunt-React] with the following stack trace:\n\n' + e.stack);
       });
@@ -235,7 +232,12 @@ var Html = function Html(_ref) {
       null,
       _react2.default.createElement("meta", { charSet: "utf-8" }),
       _react2.default.createElement("meta", { name: "viewport", content: "width=device-width, initial-scale=1" }),
-      _react2.default.createElement("link", { rel: "stylesheet", href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", integrity: "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7", crossOrigin: "anonymous" }),
+      _react2.default.createElement("link", {
+        rel: "stylesheet",
+        href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+        integrity: "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7",
+        crossOrigin: "anonymous"
+      }),
       _react2.default.createElement(
         "title",
         null,
@@ -265,18 +267,22 @@ var Html = function Html(_ref) {
           _react2.default.createElement(
             "li",
             null,
-            "This is an ",
+            "This is an",
+            ' ',
             _react2.default.createElement(
               "a",
               { href: "http://www.apollostack.com/" },
               "Apollo"
             ),
-            " example app"
+            ' ',
+            "example app"
           )
         )
       ),
       _react2.default.createElement("script", {
-        dangerouslySetInnerHTML: { __html: "window.__APOLLO_STATE__=" + JSON.stringify(state) + ";" },
+        dangerouslySetInnerHTML: {
+          __html: "window.__APOLLO_STATE__=" + JSON.stringify(state) + ";"
+        },
         charSet: "UTF-8"
       }),
       _react2.default.createElement("script", { src: "/static/bundle.js", charSet: "UTF-8" })
@@ -286,12 +292,76 @@ var Html = function Html(_ref) {
 
 Html.propTypes = {
   content: _react.PropTypes.string.isRequired,
-  state: _react.PropTypes.object.isRequired };
+  // eslint-disable-line react/forbid-prop-types
+  state: _react.PropTypes.object.isRequired
+};
 
 exports.default = Html;
 
 /***/ }),
-/* 6 */,
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.methodContainerQuery = undefined;
+
+var _templateObject = _taggedTemplateLiteral(['\n   query MethodContainerQuery($name: String) {\n       brewMethods(name: $name) {\n           id\n           name\n     }\n   }\n '], ['\n   query MethodContainerQuery($name: String) {\n       brewMethods(name: $name) {\n           id\n           name\n     }\n   }\n ']);
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactApollo = __webpack_require__(1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var MethodContainer = function MethodContainer(_ref) {
+  var _ref$data = _ref.data,
+      loading = _ref$data.loading,
+      error = _ref$data.error,
+      brewMethods = _ref$data.brewMethods;
+
+  if (loading) {
+    return _react2.default.createElement(
+      'p',
+      null,
+      'Loading ...'
+    );
+  } else if (error) {
+    return _react2.default.createElement(
+      'p',
+      null,
+      error.message
+    );
+  }
+
+  return _react2.default.createElement(
+    'ul',
+    null,
+    brewMethods.map(function (method) {
+      return _react2.default.createElement(
+        'li',
+        null,
+        method.name
+      );
+    })
+  );
+};
+
+var methodContainerQuery = exports.methodContainerQuery = (0, _reactApollo.gql)(_templateObject);
+
+exports.default = (0, _reactApollo.graphql)(methodContainerQuery, {
+  options: { pollInterval: 5000 }
+})(MethodContainer);
+
+/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -342,9 +412,7 @@ var Hello = function Hello(_ref) {
   );
 };
 
-Hello.defaultProps = {
-  name: 'World'
-};
+Hello.defaultProps = { name: 'World' };
 
 exports.default = Hello;
 
@@ -356,27 +424,25 @@ exports.default = Hello;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _MethodContainer = __webpack_require__(26);
+var _MethodContainer = __webpack_require__(6);
 
 var _MethodContainer2 = _interopRequireDefault(_MethodContainer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var MethodPage = function MethodPage(_ref) {
-    var name = _ref.name;
-    return _react2.default.createElement(_MethodContainer2.default, { name: name });
+  var name = _ref.name;
+  return _react2.default.createElement(_MethodContainer2.default, { name: name });
 };
 
-MethodPage.defaultProps = {
-    name: 'Espresso'
-};
+MethodPage.defaultProps = { name: 'Espresso' };
 
 exports.default = MethodPage;
 
@@ -388,7 +454,7 @@ exports.default = MethodPage;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _react = __webpack_require__(0);
@@ -412,10 +478,10 @@ var _MethodPage2 = _interopRequireDefault(_MethodPage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _react2.default.createElement(
-    _reactRouter.Route,
-    { component: _layout2.default },
-    _react2.default.createElement(_reactRouter.Route, { path: '/', component: _MainPage2.default }),
-    _react2.default.createElement(_reactRouter.Route, { path: '/:method', component: _MethodPage2.default })
+  _reactRouter.Route,
+  { component: _layout2.default },
+  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _MainPage2.default }),
+  _react2.default.createElement(_reactRouter.Route, { path: '/:method', component: _MethodPage2.default })
 );
 
 /***/ }),
@@ -426,11 +492,9 @@ exports.default = _react2.default.createElement(
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-exports.default = {
-    persistedQueries: false
-};
+exports.default = { persistedQueries: false };
 
 /***/ }),
 /* 12 */
@@ -440,62 +504,69 @@ exports.default = {
 
 
 var _brewMethods = [{
-    id: 1,
-    name: 'AeroPress',
-    keywords: [],
-    description: 'desc',
-    image: '',
-    ratios: ['15:1', '16:1'],
-    recipes: []
+  id: 1,
+  name: 'AeroPress',
+  keywords: [],
+  description: 'desc',
+  image: '',
+  ratios: ['15:1', '16:1'],
+  recipes: []
 }, {
-    id: 2,
-    name: 'Drip/Pour Over',
-    keywords: [],
-    description: 'desc',
-    image: '',
-    ratios: ['15:1'],
-    recipes: []
+  id: 2,
+  name: 'Drip/Pour Over',
+  keywords: [],
+  description: 'desc',
+  image: '',
+  ratios: ['15:1'],
+  recipes: []
 }, {
-    id: 3,
-    name: 'French Press',
-    keywords: [],
-    description: 'desc',
-    image: '',
-    ratios: ['16:1'],
-    recipes: []
+  id: 3,
+  name: 'French Press',
+  keywords: [],
+  description: 'desc',
+  image: '',
+  ratios: ['16:1'],
+  recipes: []
 }, {
-    id: 4,
-    name: 'Turkish Pot/Cezve',
-    keywords: [],
-    description: 'desc',
-    image: '',
-    ratios: ['16:1'],
-    recipes: []
+  id: 4,
+  name: 'Turkish Pot/Cezve',
+  keywords: [],
+  description: 'desc',
+  image: '',
+  ratios: ['16:1'],
+  recipes: []
 }, {
-    id: 5,
-    name: 'Espresso',
-    keywords: [],
-    description: 'desc',
-    image: '',
-    ratios: ['16:1'],
-    recipes: []
+  id: 5,
+  name: 'Espresso',
+  keywords: [],
+  description: 'desc',
+  image: '',
+  ratios: ['16:1'],
+  recipes: []
 }];
 
 var nextId = _brewMethods[_brewMethods.length - 1].id;
 
 module.exports = {
-    Query: {
-        brewMethods: function brewMethods() {
-            var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  // Mutation: {
+  //     addChannel: (root, args) => {
+  //         const newChannel = { id: nextId++, name: args.name };
+  //         brewMethods.push(newChannel);
+  //         return newChannel;
+  //     },
+  // }
+  Query: {
+    brewMethods: function brewMethods() {
+      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
-            if (name === '') {
-                return _brewMethods;
-            }
-            return _brewMethods.find(function (method) {
-                return method.name === name;
-            });
-        }
+      if (name === '') {
+        return _brewMethods;
+      }
+      return _brewMethods.find(function (method) {
+        return method.name === name;
+      });
     }
+  }
 };
 
 /***/ }),
@@ -524,7 +595,7 @@ module.exports = { schema: schema };
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.default = getNetworkInterface;
 
@@ -544,18 +615,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // persisted query network interface (from `extractgql`) depending on
 // the configuration within `./config.js.`
 function getNetworkInterface() {
-    var host = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-    var headers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var host = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var headers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    return new _persistgraphql.PersistedQueryNetworkInterface({
-        queryMap: _extracted_queries2.default,
-        uri: host + '/graphql',
-        opts: {
-            credentials: 'same-origin',
-            headers: headers
-        },
-        enablePersistedQueries: _config2.default.persistedQueries
-    });
+  return new _persistgraphql.PersistedQueryNetworkInterface({
+    queryMap: _extracted_queries2.default,
+    uri: host + '/graphql',
+    opts: { credentials: 'same-origin', headers: headers },
+    enablePersistedQueries: _config2.default.persistedQueries
+  });
 }
 
 /***/ }),
@@ -622,70 +690,6 @@ module.exports = require("react-dom/server");
 __webpack_require__(4);
 module.exports = __webpack_require__(3);
 
-
-/***/ }),
-/* 25 */,
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.methodContainerQuery = undefined;
-
-var _templateObject = _taggedTemplateLiteral(['\n   query MethodContainerQuery($name: String) {\n       brewMethods(name: $name) {\n           id\n           name\n     }\n   }\n '], ['\n   query MethodContainerQuery($name: String) {\n       brewMethods(name: $name) {\n           id\n           name\n     }\n   }\n ']);
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactApollo = __webpack_require__(1);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-var MethodContainer = function MethodContainer(_ref) {
-    var _ref$data = _ref.data,
-        loading = _ref$data.loading,
-        error = _ref$data.error,
-        brewMethods = _ref$data.brewMethods;
-
-    if (loading) {
-        return _react2.default.createElement(
-            'p',
-            null,
-            'Loading ...'
-        );
-    } else if (error) {
-        return _react2.default.createElement(
-            'p',
-            null,
-            error.message
-        );
-    }
-
-    return _react2.default.createElement(
-        'ul',
-        null,
-        brewMethods.map(function (method) {
-            return _react2.default.createElement(
-                'li',
-                null,
-                method.name
-            );
-        })
-    );
-};
-
-var methodContainerQuery = exports.methodContainerQuery = (0, _reactApollo.gql)(_templateObject);
-
-exports.default = (0, _reactApollo.graphql)(methodContainerQuery, {
-    options: { pollInterval: 5000 }
-})(MethodContainer);
 
 /***/ })
 /******/ ]);

@@ -1,3 +1,1 @@
-export default {
-    persistedQueries: false,
-};
+export default { persistedQueries: false };
