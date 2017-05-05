@@ -1,0 +1,1 @@
+{"mutation addChannel($name: String!) {\n  addChannel(name: $name) {\n    id\n    name\n    __typename\n  }\n}\n":1,"query ChannelsListQuery {\n  channels {\n    id\n    name\n    __typename\n  }\n}\n":2}

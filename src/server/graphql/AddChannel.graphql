@@ -1,0 +1,6 @@
+  mutation addChannel($name: String!) {
+    addChannel(name: $name) {
+      id
+      name
+    }
+  }
